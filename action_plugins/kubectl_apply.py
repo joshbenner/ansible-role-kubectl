@@ -14,14 +14,17 @@ class ActionModule(ActionBase):
         self._supports_check_mode = False
         super(ActionModule, self).run(tmp, task_vars)
 
+        kubeconfig = self._task.args.get('kubeconfig', None)
         context = self._task.args.get('context', None)
         namespace = self._task.args.get('namespace', None)
         filepath = self._task.args.get('file', None)
         data = self._task.args.get('data', None)
         raw = self._task.args.get('raw', None)
 
+        if kubeconfig is None:
+            raise AnsibleActionFail('kubeconfig is required')
         if context is None:
-            raise AnsibleActionFail('Context is required')
+            raise AnsibleActionFail('context is required')
 
         non_nulls = sum(int(c is not None) for c in (filepath, data, raw))
         if non_nulls > 1:
@@ -35,7 +38,12 @@ class ActionModule(ActionBase):
         elif data is not None:
             raw = jsonify(data)
 
-        params = ['--context={}'.format(context), '-f -']
+        params = [
+            '--kubeconfig={}'.format(kubeconfig),
+            '--context={}'.format(context),
+            'apply',
+            '-f -'
+        ]
         if namespace is not None:
             params.append('--namespace={}'.format(namespace))
 
@@ -44,7 +52,7 @@ class ActionModule(ActionBase):
         module_return = self._execute_module(
             module_name='command',
             module_args=dict(
-                _raw_params="kubectl apply {}".format(' '.join(params)),
+                _raw_params="kubectl {}".format(' '.join(params)),
                 stdin=raw
             )
         )

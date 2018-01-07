@@ -14,12 +14,13 @@ BSD
 
 Retrieve object details from a cluster.
 
-| Parameter | Description                                     |
-|:----------|:------------------------------------------------|
-| context   | Which kubeconfig context to use.                |
-| namespace | The namespace of resource. (default: `default`) |
-| kind      | The kind of resource to retrieve.               |
-| name      | Name of the resource to retrieve.               |
+| Parameter  | Description                                     |
+|:-----------|:------------------------------------------------|
+| kubeconfig | Path to kubectl config file to use. Required.   |
+| context    | Which kubeconfig context to use. Required.      |
+| namespace  | The namespace of resource. (default: `default`) |
+| kind       | The kind of resource to retrieve. Required.     |
+| name       | Name of the resource to retrieve. Required.     |
 
 The result of the action will contain an `object` attribute with the
 retrieved Kubernetes resource.
@@ -27,6 +28,7 @@ retrieved Kubernetes resource.
 ```yaml
 - name: Get current ConfigMap
   kubectl_get:
+    kubeconfig: /root/.kube/config
     context: minikube
     namespace: my-namespace
     kind: ConfigMap
@@ -36,19 +38,21 @@ retrieved Kubernetes resource.
 
 ### kubectl_apply
 
-| Parameter | Description                                |
-|:----------|:-------------------------------------------|
-| context   | Which kubeconfig context to use. Required. |
-| namespace | The namespace to apply to.                 |
-| file      | Path to the YAML file to apply.            |
-| data      | Structured YAML data to apply.             |
-| raw       | Raw text to apply.                         |
+| Parameter  | Description                                   |
+|:-----------|:----------------------------------------------|
+| kubeconfig | Path to kubectl config file to use. Required. |
+| context    | Which kubeconfig context to use. Required.    |
+| namespace  | The namespace to apply to.                    |
+| file       | Path to the YAML file to apply.               |
+| data       | Structured YAML data to apply.                |
+| raw        | Raw text to apply.                            |
 
 **NOTE:** Only one of `file`, `data`, or `raw` may be used.
 
 ```yaml
 - name: Update ConfigMap
   kubectl_apply:
+    kubeconfig: /root/.kube/config
     context: minikube
     namespace: my-namespace
     data:
@@ -62,6 +66,7 @@ retrieved Kubernetes resource.
 
 - name: Update Deployment
   kubectl_apply:
+    kubeconfig: /root/.kube/config
     context: minikube
     namespace: my-namespace
     file: manifests/foo-deployment.yml

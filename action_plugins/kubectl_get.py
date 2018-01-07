@@ -11,19 +11,21 @@ class ActionModule(ActionBase):
     def run(self, tmp=None, task_vars=None):
         super(ActionModule, self).run(tmp, task_vars)
 
-        for param in ('context', 'kind', 'name'):
+        for param in ('kubeconfig', 'context', 'kind', 'name'):
             if self._task.args.get(param, None) is None:
                 raise AnsibleActionFail('{} is required'.format(param))
 
+        kubeconfig = self._task.args.get('kubeconfig', None)
         context = self._task.args.get('context', None)
         namespace = self._task.args.get('namespace', 'default')
         kind = self._task.args.get('kind', None)
         name = self._task.args.get('name', None)
 
         params = [
-            'get', kind, name,
+            '--kubeconfig={}'.format(kubeconfig),
             '--context={}'.format(context),
             '--namespace={}'.format(namespace),
+            'get', kind, name,
             '-o json'
         ]
 
