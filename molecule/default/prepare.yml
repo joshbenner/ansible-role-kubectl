@@ -24,3 +24,8 @@
             user:
               username: fake
               password: sekrit
+          contexts:
+          - name: remove_context
+            context:
+              user: remove_user
+              cluster: remove_cluster

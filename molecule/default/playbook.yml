@@ -17,6 +17,12 @@
         user:
           username: foo
           password: bar
+    - kubectl_context:
+        kubeconfig: /kubeconfig
+        name: added-context
+        context:
+          user: added-user
+          cluster: added-cluster
     - kubectl_cluster:
         kubeconfig: /test_kubeconfig
         name: remove_cluster
@@ -24,4 +30,8 @@
     - kubectl_user:
         kubeconfig: /test_kubeconfig
         name: remove_user
+        state: absent
+    - kubectl_context:
+        kubeconfig: /test_kubeconfig
+        name: remove_context
         state: absent

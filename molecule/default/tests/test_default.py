@@ -29,8 +29,10 @@ def test_kubeconfig_exists(host):
 @pytest.mark.parametrize('path,content,present', [
     ('/kubeconfig', 'added-cluster', True),
     ('/kubeconfig', 'added-user', True),
+    ('/kubeconfig', 'added-context', True),
     ('/test_kubeconfig', 'remove_cluster', False),
-    ('/test_kubeconfig', 'remove_cluster', False)
+    ('/test_kubeconfig', 'remove_user', False),
+    ('/test_kubeconfig', 'remove_context', False)
 ])
 def test_kubeconfig(host, path, content, present):
     f = host.file(path)
