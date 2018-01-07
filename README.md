@@ -2,10 +2,6 @@
 
 Install kubectl binary and provide kubectl action plugins.
 
-## Requirements
-
-System running Ansible must have the `PyYaml` Python package installed.
-
 ## License
 
 BSD
