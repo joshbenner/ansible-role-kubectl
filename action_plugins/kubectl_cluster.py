@@ -94,26 +94,30 @@ class ActionModule(ActionBase):
             ]
 
         if changed and not self._play_context.check_mode:
+            if tmp is None:
+                created_tmp = True
+                tmp = self._make_tmp_path()
+            else:
+                created_tmp = False
+            remote_src = os.path.join(tmp, kubeconfig)
+            self._transfer_file(tmpfile, remote_src)
             res = self._execute_module(
                 module_name='copy',
                 module_args=dict(
-                    src=tmpfile,
+                    src=remote_src,
                     dest=kubeconfig,
                     validate='kubectl --kubeconfig=%s config view'
                 ),
                 task_vars=task_vars,
                 tmp=tmp
             )
+            if created_tmp:
+                self._remove_tmp_path(tmp)
             return_result['copy'] = res
             if res.get('failed'):
                 return_result['failed'] = True
 
-        try:
-            os.unlink(tmpfile)
-        except OSError:
-            # Copy module removes if successful, so this is fine.
-            pass
-
+        os.unlink(tmpfile)
         return return_result
 
     @staticmethod
