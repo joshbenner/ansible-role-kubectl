@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-import yaml
 import re
 
 from ansible.errors import AnsibleActionFail
 from ansible.plugins.action import ActionBase
+from ansible.module_utils.basic import jsonify
 
 
 class ActionModule(ActionBase):
@@ -33,7 +33,7 @@ class ActionModule(ActionBase):
             with open(filepath, 'r') as file_to_apply:
                 raw = file_to_apply.read()
         elif data is not None:
-            raw = yaml.safe_dump(data)
+            raw = jsonify(data)
 
         params = ['--context={}'.format(context), '-f -']
         if namespace is not None:
