@@ -5,33 +5,39 @@
   roles:
     - role: ../../..
   post_tasks:
-    - kubectl_cluster:
+    - name: Add cluster
+      kubectl_cluster:
         kubeconfig: /kubeconfig
         name: added-cluster
         cluster:
           server: https://localhost
           insecure-skip-tls-verify: yes
-    - kubectl_user:
+    - name: Add user
+      kubectl_user:
         kubeconfig: /kubeconfig
         name: added-user
         user:
           username: foo
           password: bar
-    - kubectl_context:
+    - name: Add context
+      kubectl_context:
         kubeconfig: /kubeconfig
         name: added-context
         context:
           user: added-user
           cluster: added-cluster
-    - kubectl_cluster:
+    - name: Remove cluster
+      kubectl_cluster:
         kubeconfig: /test_kubeconfig
         name: remove_cluster
         state: absent
-    - kubectl_user:
+    - name: Remove user
+      kubectl_user:
         kubeconfig: /test_kubeconfig
         name: remove_user
         state: absent
-    - kubectl_context:
+    - name: Remove context
+      kubectl_context:
         kubeconfig: /test_kubeconfig
         name: remove_context
         state: absent
