@@ -1,3 +1,26 @@
 ---
 - hosts: all
   gather_facts: no
+  tasks:
+    - name: Create fake config for testing
+      copy:
+        dest: /test_kubeconfig
+        content: |
+          apiVersion: v1
+          kind: Config
+          clusters:
+          - name: remove_cluster
+            cluster:
+              server: https://localhost
+          - name: keep_cluster
+            cluster:
+              server: https://localhost
+          users:
+          - name: remove_user
+            user:
+              username: fake
+              password: sekrit
+          - name: keep_user
+            user:
+              username: fake
+              password: sekrit

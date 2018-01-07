@@ -4,3 +4,24 @@
   become: yes
   roles:
     - role: ../../..
+  post_tasks:
+    - kubectl_cluster:
+        kubeconfig: /kubeconfig
+        name: added-cluster
+        cluster:
+          server: https://localhost
+          insecure-skip-tls-verify: yes
+    - kubectl_user:
+        kubeconfig: /kubeconfig
+        name: added-user
+        user:
+          username: foo
+          password: bar
+    - kubectl_cluster:
+        kubeconfig: /test_kubeconfig
+        name: remove_cluster
+        state: absent
+    - kubectl_user:
+        kubeconfig: /test_kubeconfig
+        name: remove_user
+        state: absent
