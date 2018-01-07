@@ -1,0 +1,15 @@
+---
+- name: Download kubectl v{{ kubectl_version }}
+  get_url:
+    url: "{{ kubectl_download_url }}"
+    dest: "{{ kubectl_download_path }}"
+    mode: 0755
+    checksum: "{{ kubectl_checksum[ansible_system | lower] }}"
+  when: kubectl_install
+
+- name: Link kubectl
+  file:
+    state: link
+    src: "{{ kubectl_download_path }}"
+    dest: "{{ kubectl_link_path }}"
+  when: kubectl_install and kubectl_link

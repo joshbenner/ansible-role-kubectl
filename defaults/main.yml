@@ -1,0 +1,15 @@
+---
+# defaults file for kubectl
+
+kubectl_install: yes
+
+kubectl_download_path: /usr/local/bin/kubectl-{{ kubectl_version }}
+kubectl_link: yes
+kubectl_link_path: /usr/local/bin/kubectl
+
+kubectl_download_mirror: https://storage.googleapis.com
+kubectl_download_url: "{{ kubectl_download_mirror }}/kubernetes-release/release/v{{ kubectl_version }}/bin/{{ ansible_system | lower }}/amd64/kubectl"
+kubectl_version: 1.9.1
+kubectl_checksum:
+  darwin: sha256:2121f7b573aac3835dbd1994ad4f6028eca979de2dc8dfa27e39d34b96288337
+  linux: sha256:ec1abbc1b91fb23e00558c09892d053012c7581afe6e5a36cada3713b0b7c37b
