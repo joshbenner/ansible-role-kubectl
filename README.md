@@ -1,5 +1,7 @@
 # kubectl
 
+[![Build Status](https://travis-ci.org/joshbenner/ansible-role-kubectl.svg?branch=master)](https://travis-ci.org/joshbenner/ansible-role-kubectl)
+
 Install kubectl binary and provide kubectl action plugins.
 
 ## License
