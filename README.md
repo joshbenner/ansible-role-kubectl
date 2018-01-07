@@ -80,7 +80,7 @@ Update kubectl configuration to include (or exclude) a cluster config.
 | state           | If cluster should be `absent` or `present` (default).                |
 | name            | Name of the cluster. Required.                                       |
 | cluster         | Cluster to insert. Required for `state=present`.                     |
-| fail_on_missing | Fail is kubeconfig is missing, otherwise create it. (default: false) |
+| fail_on_missing | Fail if kubeconfig is missing, otherwise create it (default: false). |
 
 ```yaml
 - name: Ensure test cluster is in kubectl config
@@ -90,6 +90,35 @@ Update kubectl configuration to include (or exclude) a cluster config.
     cluster:
       certificate-authority-data: "{{ my-ca-content | b64encode }}"
       server: https://test.example.com
+
+- name: Remove the dev cluster
+  kubectl_cluster:
+    kubeconfig: "{{ ansible_home }}/.kube/config"
+    name: dev
+    state: absent
+```
+
+### kubectl_user
+
+Update kubectl configuration to include (or exclude) a user.
+
+| Parameter       | Description                                                          |
+|:----------------|:---------------------------------------------------------------------|
+| kubeconfig      | Path to the kubectl config to edit. Required.                        |
+| state           | If the user should be `absent` or `present` (default).               |
+| name            | The config name for the user (not same as username). Required.       |
+| user            | User to insert. Required for `state=present`.                        |
+| fail_on_missing | Fail if kubeconfig is missing, otherwise create it (default: false). |
+
+
+```yaml
+- name: Ensure foo user is in kubectl config
+  kubectl_cluster:
+    kubeconfig: "{{ ansible_home }}/.kube/config"
+    name: foo
+    user:
+      client-certificate: /path/to/client.crt
+      client-key: /path/to/client.key
 
 - name: Remove the dev cluster
   kubectl_cluster:
