@@ -9,6 +9,9 @@ from ansible.module_utils.basic import jsonify
 
 class ActionModule(ActionBase):
     out_re = re.compile(r'^(?P<kind>[^ ]+) "(?P<name>[^"]+)" (?P<action>.+)$')
+    out_not_found_re = re.compile(r'^Error from server \(NotFound\): error when stopping'
+                                  ' "(?P<source>[^"]+)": (?P<kind>[^ ]+) "(?P<name>[^"]+)" not found$')
+
 
     def run(self, tmp=None, task_vars=None):
         self._supports_check_mode = False
@@ -60,14 +63,23 @@ class ActionModule(ActionBase):
         results = []
         unparsed_lines = []
         changed = False
-        for line in module_return['stdout_lines']:
-            m = self.out_re.match(line)
-            if m:
-                results.append(m.groupdict())
-                if m.group('action') != 'unchanged':
-                    changed = True
-            else:
-                unparsed_lines.append(line)
+
+        if module_return.get('failed', None):
+            for line in module_return['stderr_lines']:
+                m = self.out_not_found_re.match(line)
+                if m:
+                    results.append(m.groupdict())
+                    changed = False
+                    module_return['failed'] = False
+        else:
+            for line in module_return['stdout_lines']:
+                m = self.out_re.match(line)
+                if m:
+                    results.append(m.groupdict())
+                    if m.group('action') != 'unchanged':
+                        changed = True
+                else:
+                    unparsed_lines.append(line)
 
         module_return.update(dict(
             changed=changed,
