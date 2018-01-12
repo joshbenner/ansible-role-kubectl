@@ -81,10 +81,6 @@ class ActionModule(ActionBase):
             if m:
                 results.append(m.groupdict())
                 changed = True
-                # Make sure to report a change when a change happen
-                # even if it fails as failure will be reported in a
-                # fatal traceback
-                self._task.ignore_errors = True
             else:
                 unparsed_lines.append(line)
 
