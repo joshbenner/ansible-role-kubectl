@@ -65,21 +65,28 @@ class ActionModule(ActionBase):
         changed = False
 
         if module_return.get('failed', None):
+            failure_count = 0
             for line in module_return['stderr_lines']:
                 m = self.out_not_found_re.match(line)
                 if m:
                     results.append(m.groupdict())
-                    changed = False
-                    module_return['failed'] = False
-        else:
-            for line in module_return['stdout_lines']:
-                m = self.out_re.match(line)
-                if m:
-                    results.append(m.groupdict())
-                    if m.group('action') != 'unchanged':
-                        changed = True
                 else:
+                    failure_count += 1
                     unparsed_lines.append(line)
+            if failure_count == 0:
+                module_return['failed'] = False
+
+        for line in module_return['stdout_lines']:
+            m = self.out_re.match(line)
+            if m:
+                results.append(m.groupdict())
+                changed = True
+                # Make sure to report a change when a change happen
+                # even if it fails as failure will be reported in a
+                # fatal traceback
+                self._task.ignore_errors = True
+            else:
+                unparsed_lines.append(line)
 
         module_return.update(dict(
             changed=changed,

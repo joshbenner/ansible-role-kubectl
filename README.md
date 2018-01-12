@@ -110,6 +110,11 @@ retrieved Kubernetes resource.
     file: manifests/foo-deployment.yml
 ```
 
+<div class="alert alert-warning">
+  <strong>Warning</strong> <em>Ansible</em> will not report changes on failure, if you are using raw with multiple resource definitions<br />
+  <em>kubectl</em> will <strong>ignore failure</strong> to be able to report a change but it will result in a <strong>fatal traceback</strong>.
+</div>
+
 ### kubectl_cluster
 
 Update kubectl configuration to include (or exclude) a cluster config.
