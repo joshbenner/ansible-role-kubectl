@@ -9,9 +9,9 @@ from ansible.module_utils.basic import jsonify
 
 class ActionModule(ActionBase):
     out_re = re.compile(r'^(?P<kind>[^ ]+) "(?P<name>[^"]+)" (?P<action>.+)$')
-    out_not_found_re = re.compile(r'^Error from server \(NotFound\): error when stopping'
-                                  ' "(?P<source>[^"]+)": (?P<kind>[^ ]+) "(?P<name>[^"]+)" not found$')
-
+    out_not_found_re = re.compile(
+        r'^Error from server \(NotFound\): error when stopping'
+        ' "(?P<source>[^"]+)": (?P<kind>[^ ]+) "(?P<name>[^"]+)" not found$')
 
     def run(self, tmp=None, task_vars=None):
         self._supports_check_mode = False
