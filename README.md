@@ -4,6 +4,8 @@
 
 Install kubectl binary and provide kubectl action plugins.
 
+**NOTE:** If you do not wish the role to install kubectl make sure to set `kubectl_install` to `no`.
+
 ## License
 
 BSD
@@ -72,6 +74,43 @@ retrieved Kubernetes resource.
     file: manifests/foo-deployment.yml
 ```
 
+### kubectl_delete
+
+| Parameter  | Description                                   |
+|:-----------|:----------------------------------------------|
+| kubeconfig | Path to kubectl config file to use. Required. |
+| context    | Which kubeconfig context to use. Required.    |
+| namespace  | The namespace to delete to.                    |
+| file       | Path to the YAML file to delete.               |
+| data       | Structured YAML data to delete.                |
+| raw        | Raw text to delete.                            |
+
+**NOTE:** Only one of `file`, `data`, or `raw` may be used.
+
+```yaml
+- name: Deltee ConfigMap
+  kubectl_delete:
+    kubeconfig: /root/.kube/config
+    context: minikube
+    namespace: my-namespace
+    data:
+      kind: ConfigMap
+      apiVersion: v1
+      metadata:
+        name: foo-config
+      data:
+        foo: bar
+        debug: true
+
+- name: Delete Deployment
+  kubectl_delete:
+    kubeconfig: /root/.kube/config
+    context: minikube
+    namespace: my-namespace
+    file: manifests/foo-deployment.yml
+```
+
+**WARNING**: _Ansible_ will not report a change on failure. If you are using `raw` with _multiple resource definitions_, _changes_ will not be reported so make sure to check the `traceback` for more information.
 
 ### kubectl_cluster
 
