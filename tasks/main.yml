@@ -1,6 +1,6 @@
 ---
 - name: Check kubectl version
-  shell: kubectl version --client -o json
+  command: kubectl version --client -o json
   register: _kubectl_version
   changed_when: _kubectl_version.rc != 0
   failed_when: false
