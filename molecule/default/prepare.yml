@@ -1,5 +1,12 @@
 ---
-- hosts: all
+- hosts: repo
+  tasks:
+    - name: Enable apt https
+      apt:
+        name: apt-transport-https
+        state: present
+
+- hosts: download
   gather_facts: no
   tasks:
     - name: Create fake config for testing

@@ -6,12 +6,20 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: kubectl-default-xenial
+  - name: kubectl-xenial-download
     image: ubuntu:xenial
+    groups: [download]
+  - name: kubectl-xenial-repo
+    image: ubuntu:xenial
+    groups: [repo]
 provisioner:
   name: ansible
   lint:
     name: ansible-lint
+  inventory:
+    group_vars:
+      repo:
+        kubectl_use_repo: true
 scenario:
   name: default
 verifier:

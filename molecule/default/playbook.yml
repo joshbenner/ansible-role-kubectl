@@ -2,9 +2,13 @@
 - name: Converge
   hosts: all
   become: yes
+  strategy: free
   roles:
     - role: ../../..
-  post_tasks:
+
+- name: Edit kubeconfig
+  hosts: download
+  tasks:
     - name: Add cluster
       kubectl_cluster:
         kubeconfig: /kubeconfig

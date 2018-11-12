@@ -99,6 +99,7 @@ class ActionModule(ActionBase):
                 tmp = self._make_tmp_path()
             else:
                 created_tmp = False
+            self._connection._shell.tmpdir = tmp
             remote_src = os.path.join(tmp, kubeconfig)
             self._transfer_file(tmpfile, remote_src)
             res = self._execute_module(
@@ -108,8 +109,7 @@ class ActionModule(ActionBase):
                     dest=kubeconfig,
                     validate='kubectl --kubeconfig=%s config view'
                 ),
-                task_vars=task_vars,
-                tmp=tmp
+                task_vars=task_vars
             )
             if created_tmp:
                 self._remove_tmp_path(tmp)
