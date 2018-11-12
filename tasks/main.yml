@@ -10,12 +10,15 @@
 - name: Check if kubectl version matches
   set_fact:
     _kubectl_version_matches: "{{ (_kubectl_version.stdout|from_json).clientVersion.gitVersion == ('v' + kubectl_version) }}"
-  when: _kubectl_version is not changed
+  when:
+    - kubectl_install
+    - _kubectl_version is not changed
 
 - name: Determine if and how kubectl needs to be installed
   set_fact:
     _kubectl_use_repo: "{{ kubectl_use_repo and ansible_os_family|lower == 'debian' }}"
     _kubectl_install: "{{ kubectl_install and (_kubectl_version is changed or not _kubectl_version_matches|d(false)) }}"
+  when: kubectl_install
 
 - name: Install via download
   when:
