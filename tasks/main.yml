@@ -22,7 +22,7 @@
 
 - name: Install via download
   when:
-    - _kubectl_install
+    - _kubectl_install|d(false)
     - not _kubectl_use_repo
   block:
     - name: Check if already downloaded
@@ -47,7 +47,7 @@
 
 - name: Install via repo
   when:
-    - _kubectl_install
+    - _kubectl_install|d(false)
     - _kubectl_use_repo
   block:
     - name: Install apt key
